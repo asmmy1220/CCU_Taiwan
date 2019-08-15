@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    void testPush() {
+        Log.d("test","測試用push上傳程式");
+    }
+
     private void tcpClient(){
 
 
