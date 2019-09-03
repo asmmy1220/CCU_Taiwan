@@ -6,7 +6,7 @@ android {
     buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "com.example.asfast"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -37,6 +37,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
-
+    // add SDKs for desired Firebase products
+    implementation 'com.google.firebase:firebase-database:19.0.0'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
 
 }
+
+apply plugin: 'com.google.gms.google-services'
