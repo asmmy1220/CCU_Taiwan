@@ -34,19 +34,15 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
 
-
-
     @BindView(R.id.button1)Button button1;
     @BindView(R.id.editText_name)EditText editText;
     @BindView(R.id.button2)Button button2;
     @BindView(R.id.textView2)TextView textView;
 
 
-
-
     private static final int port=12567;//connection另一端的端口
     //hostip寫服務端的IP
-    private static final String hostip="192.168.1.28";//connection另一端的ip
+    private static final String hostip="192.168.1.11";//connection另一端的ip
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -82,32 +78,48 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     }
 
-    public void basicReadWrite() {
+    public void basicReadWrite(String d,String e,String g,String f) {
         // [START write_message]
         // Write a message to the database
 
+
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
+        DatabaseReference numberRef = myRef.child("number");
+        ValueEventListener eventListener = new ValueEventListener()
 
-        myRef.child("Hola").setValue("Sammy");
-        // [END write_message]
-        // [START read_message]
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+
+
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("hola", "Value is: " + value);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String number = ds.child("number").getValue(String.class);
+                    String name = ds.child("name").getValue(String.class);
+                    Log.d("TAG", number + " / " + name);
+                }
+
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("amigo", "Failed to read value.", error.toException());
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("amigo", "Failed to read value.", databaseError.toException());
             }
-        });
+        };numberRef.addListenerForSingleValueEvent(eventListener);
+
+        editText.getText().toString().trim();
+
+        myRef.child(editText.getText().toString()).child("Average").setValue(d);
+        myRef.child(editText.getText().toString()).child("Max").setValue(e);
+        myRef.child(editText.getText().toString()).child("Min").setValue(g);
+        myRef.child(editText.getText().toString()).child("Std").setValue(f);
+
+
 
 
     }
@@ -131,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.button2)   //測試用按鈕，無任何功能。
     public void setButton2(){
-        basicReadWrite();
+        //basicReadWrite();
         Toast toast = Toast.makeText(this, "按鈕已被點擊", Toast.LENGTH_SHORT);
         toast.show();
 
@@ -142,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public String tcpClient(){
+    public void tcpClient(){
 
         String hello = "";
 
@@ -186,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             //int Hii = Integer.parseInt(inMsg);
 
 
-            String[] tokens = inMsg.split(",");
+            String[] tokens = inMsg.split(",|\n");
 
             for (String token:tokens) {
                 Log.i("TcpClient", "received: " + token);
@@ -195,18 +207,23 @@ public class MainActivity extends AppCompatActivity {
             Log.i("矩陣","平均值："+tokens[0]);
             Log.i("矩陣","最大值："+tokens[1]);
             Log.i("矩陣","最小值："+tokens[2]);
+            Log.i("矩陣","標準差："+tokens[3]);
 
-            //textView.setText(String.format(getResources().getString(R.string.average),tokens[0],tokens[1],tokens[2]));
+            textView.setText("平均值："+tokens[0]+"\n"+"最大值"+tokens[1]+"\n"+"最小值："+tokens[2]+"\n"+"標準差："+tokens[3]);
+
+            basicReadWrite(tokens[0],tokens[1],tokens[2],tokens[3]);
+
+
 
             socketClient.close();
 
-              return hello;
+
 
 
         }catch (UnknownHostException e){e.printStackTrace();}
         catch (IOException e){e.printStackTrace();}
 
-        return hello ;
+
 
     }
 
