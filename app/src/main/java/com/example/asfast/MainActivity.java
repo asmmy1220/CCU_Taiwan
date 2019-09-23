@@ -1,4 +1,5 @@
 package com.example.asfast;
+import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int port=12567;//connection另一端的端口
     //hostip寫服務端的IP
-    private static final String hostip="192.168.1.11";//connection另一端的ip
+    private static final String hostip="192.168.1.37";//connection另一端的ip
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -144,8 +145,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.button2)   //測試用按鈕，無任何功能。
     public void setButton2(){
         //basicReadWrite();
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this , MapsActivity.class);
+        startActivity(intent);
         Toast toast = Toast.makeText(this, "按鈕已被點擊", Toast.LENGTH_SHORT);
         toast.show();
+
 
     }
 
