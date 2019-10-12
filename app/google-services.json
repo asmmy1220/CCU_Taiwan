@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "191678073087",
+    "firebase_url": "https://asfast2-49ddc.firebaseio.com",
+    "project_id": "asfast2-49ddc",
+    "storage_bucket": "asfast2-49ddc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191678073087:android:0b47391d69587c40ca64ca",
+        "android_client_info": {
+          "package_name": "com.example.asfast"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "191678073087-7r36e7od58og02evf8ls0d8qdrqvm2aq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4BycvEzHa7wbCzhph5ALXr0tBm-ifLi4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "191678073087-7r36e7od58og02evf8ls0d8qdrqvm2aq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
