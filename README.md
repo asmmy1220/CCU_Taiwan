@@ -20,6 +20,8 @@ $ node app
  
  Our software team employed Google Firebase to demonstrate the concept of integrating an online database. When a new subject is tested, Firebase will create a new index to store its test result. If further tests are conducted, the result shall be recorded in the related index. Moreover, the Firebase can be accessed by authorized personal so that they will get updated with the fresh test result instantly.
  
+![](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/Firebase3.png)
+ 
  ## Network Socket
  
  Since a WiFi connection may not be available on a pig farm, the ASFAST device is unable to upload test results directly to the online database. Thus, the microcomputer in the ASFAST device must connect with an Android phone and let the Android phone upload the data. During the development stage, we found that connecting two devices running different operating system is never an easy task. Finally, we developed a solution by integrating the TCP network socket framework to exchange information between these programs running on two different systems.
