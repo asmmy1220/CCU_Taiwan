@@ -22,6 +22,8 @@ Download the file "Python" and click "TCP.py" to run our program.
 
 
 ![](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/firebase.png)
-The connetion program between Android app and google Firebase is including in our app document, but you need to use your own Firebase project to connect. 
+
+
+### Notice: The connetion program between Android app and google Firebase is including in our app document, but you need to use your own Firebase project to connect. 
 
 
