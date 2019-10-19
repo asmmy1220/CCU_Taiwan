@@ -32,15 +32,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Optional;
+
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -82,15 +80,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private static final int port = 12567;//connection另一端的端口
-    //hostip寫服務端的IP
-    private static final String hostip = "192.168.1.32";//connection另一端的ip
+    private static final int port = 12567;//connect to another port
+    //host ip
+    private static final String hostip = "192.168.1.32";//connect to another port
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-        @Override   //底部導航欄切換會顯示不同文字。
+        @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_detect:
@@ -136,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         DatabaseReference numberRef = myRef.child("number");
-        //DatabaseReference dateRef = myRef.child("date");
+
         View mview = getLayoutInflater().inflate(R.layout.layout,null);
         EditText editText = (EditText)mview.findViewById(R.id.editText5);
 
@@ -165,31 +163,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //editText.getText().toString().trim();
+
 
         Log.i("Client", "firebase");
 
 
         myRef.child("E Farm").child("Number:"+e).child("ASFAST test").child(Time).setValue(message);
-        //myRef.child(editText.getText().toString()).child("Average").setValue(d);
-        //myRef.child("E Farm").child(editText.getText().toString()).child("Result").setValue("Negative");
+
 
 
     }
 
-    @OnClick({R.id.button1})   //偵測功能按鈕，可傳輸訊息至python
+    @OnClick({R.id.button1})   //detect the button and send message to the python.
     public void runtcpClient() {
 
         View mview = getLayoutInflater().inflate(R.layout.layout,null);
-        String a = "123";
-        String b = "300";
-        String c = "100";
-        String d = "200";
+
         EditText editText = (EditText)mview.findViewById(R.id.editText5);
-        //launchBarDialog(mview);
         dialog2();
-        //basicReadWrite(a, b, c, d);
-        //Log.i("Client", "按鈕監聽事件有效");
+
 
 
 
@@ -231,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    // Here you should write your time consuming task...
-                    //tcpClient();
+
+
 
                     tcpClient(mmm);
 
@@ -261,71 +253,10 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void dialog3(){
-
-        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-        String a = "123";
-        String b = "300";
-        String c = "100";
-        String d = "200";
-
-
-
-        Thread t = new Thread(new Runnable() {
-
-            @Override
-
-            public void run() {
-
-                try {
-
-                    Thread.sleep(3000);//顯示3秒後，關閉dialog
-
-                } catch (InterruptedException e) {
-
-// TODO Auto-generated catch block
-
-                    e.printStackTrace();
-
-                }
-
-               finally {
-                    progressDialog.dismiss();
-                }
-
-
-            }
-
-
-        });
-
-
-        t.start();
 
 
 
 
-
-
-    }
-
-
-    public void dialog123(String h){
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm ");
-        String Time = sdf.format(new Date());
-
-        dialog.setTitle("Test completed");
-        //dialog.setMessage("Average:"+h+"\n"+"Max"+i+"\n"+"Min"+j+"\n"+k);
-        dialog.setMessage(Time+"\n"+"Result: Negative"+"\n"+"Cloud database: Uploaded"+"\n"+"Average:"+h);
-        dialog.setCancelable(true);
-        dialog.show();
-
-
-    }
 
     public void dialog2(){
 
@@ -356,16 +287,7 @@ public class MainActivity extends AppCompatActivity {
                     launchBarDialog(mview,aaa);
 
 
-                    //Toast.makeText(MainActivity.this,"Proceeding to test",Toast.LENGTH_LONG).show();
 
-                   /* Thread thread = new Thread() {
-
-                        @Override
-                        public void  run(){
-                          tcpClient();
-                        }
-                    };
-                    thread.start(); */
 
 
                 }
@@ -392,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void tcpClient(String num){
 
-        String hello = "";
+
 
 
         try{
@@ -403,11 +325,7 @@ public class MainActivity extends AppCompatActivity {
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socketClient.getOutputStream()));
-                //LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-                //View mview = getLayoutInflater().inflate(R.layout.layout,null);
-                //EditText editText = mview.findViewById(R.id.editText5);
 
-                //String op = editText.getText().toString();
 
                 String outMsg = "TCP connecting to " + port + System.getProperty("line.separator");//發出的數據
 
@@ -450,10 +368,9 @@ public class MainActivity extends AppCompatActivity {
 
             Log.i("矩陣","Average："+tokens[0]);
             Log.i("矩陣","Result："+tokens[1]);
-            //Log.i("矩陣","最小值："+tokens[2]);
-            //Log.i("矩陣","標準差："+tokens[3]);
 
-            //textView.setText("平均值："+tokens[0]+"\n"+"最大值"+tokens[1]+"\n"+"最小值："+tokens[2]+"\n"+"標準差："+tokens[3]);
+
+
 
             basicReadWrite(tokens[0],num,tokens[1]);
 
