@@ -2,7 +2,7 @@
 ## Python program
 When the device is booted and connected to an Android phone, the Python program will stay idle pending a command Once it receives the trigger signal from the Android phone, it will start the test procedure. The first thing it does is to control all the motors in our device to complete test procedure. Then, it will process the fluorescence test data once the test is finished. Lastly, it sends the processed test result back to the Android application.
 
-![](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/androidapp2.png)
+!
 
 ```sh
 $ cd dillinger
@@ -13,7 +13,8 @@ $ node app
 ## Android application
 
  An Android application to cooperate with Python. It serves as a connection between the clients and online database and also records the identity of test subject for each particular test. Furthermore, it also uploads the test result to the online database immediately after every single test procedure is done. Finally, it will maintain a list of recent test results to provide longitudinal tracking.
- 
+
+[](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/androidapp2.png)
  
  ## Google Firebase
  
