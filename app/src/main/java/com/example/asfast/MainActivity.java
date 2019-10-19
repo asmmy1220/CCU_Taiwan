@@ -1,10 +1,10 @@
 package com.example.asfast;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+
 import android.os.Bundle;
 
 
@@ -15,7 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 
-import android.os.SystemClock;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,18 +53,13 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    private TextView location1;
-    private String commadStr;
-    private LocationManager locationManager;
-    public static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
 
 
 
 
-    private static final String[] INITIAL_PERMS = {
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-    };
+    ProgressDialog barProgressDialog;
+    Handler updateBarHandler;
+
 
 
     @BindView(R.id.button1)
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int port = 12567;//connection另一端的端口
     //hostip寫服務端的IP
-    private static final String hostip = "192.168.1.30";//connection另一端的ip
+    private static final String hostip = "192.168.1.32";//connection另一端的ip
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -122,8 +117,9 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = findViewById(R.id.message);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         ButterKnife.bind(this);
-        commadStr = LocationManager.GPS_PROVIDER;
-        location1 = findViewById(R.id.location1);
+        View mview = getLayoutInflater().inflate(R.layout.layout,null);
+        EditText editText = (EditText)mview.findViewById(R.id.editText5);
+
 
 
 
@@ -131,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void basicReadWrite(String d, String e, String g, String f) {
+    public void basicReadWrite(String d,String e,String message) {
         // [START write_message]
         // Write a message to the database
 
@@ -141,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference();
         DatabaseReference numberRef = myRef.child("number");
         //DatabaseReference dateRef = myRef.child("date");
+        View mview = getLayoutInflater().inflate(R.layout.layout,null);
+        EditText editText = (EditText)mview.findViewById(R.id.editText5);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm ");
         String Time = sdf.format(new Date());
@@ -172,45 +170,102 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Client", "firebase");
 
 
-        //myRef.child("E Farm").child("Number:039495").child("ASFAST test").child("2019-04-16 10:28").setValue("Result: negative");
-        myRef.child(editText.getText().toString()).child("Average").setValue(d);
+        myRef.child("E Farm").child("Number:"+e).child("ASFAST test").child(Time).setValue(message);
+        //myRef.child(editText.getText().toString()).child("Average").setValue(d);
+        //myRef.child("E Farm").child(editText.getText().toString()).child("Result").setValue("Negative");
+
 
     }
 
     @OnClick({R.id.button1})   //偵測功能按鈕，可傳輸訊息至python
     public void runtcpClient() {
 
-
+        View mview = getLayoutInflater().inflate(R.layout.layout,null);
         String a = "123";
         String b = "300";
         String c = "100";
         String d = "200";
-
+        EditText editText = (EditText)mview.findViewById(R.id.editText5);
+        //launchBarDialog(mview);
         dialog2();
         //basicReadWrite(a, b, c, d);
         //Log.i("Client", "按鈕監聽事件有效");
 
 
-        //Thread thread = new Thread() {
 
-            //@Override
-            //public void run() {
-                //super.run();
-            //}
-
-
-
-        //};
-        //thread.start();
     }
 
 
-    /*@Optional
-    @OnClick(R.id.button2)
-    public void setButton2() {
+
+
+    public void launchBarDialog(View view,String mmm) {
+        updateBarHandler = new Handler();
+        barProgressDialog = new ProgressDialog(MainActivity.this);
+        View mview = getLayoutInflater().inflate(R.layout.layout,null);
+
+        barProgressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                //Put your AlertDialog Here ....
+                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm ");
+                String Time = sdf.format(new Date());
+
+                alert.setTitle("Test completed");
+                //dialog.setMessage("Average:"+h+"\n"+"Max"+i+"\n"+"Min"+j+"\n"+k);
+                alert.setMessage(Time+"\n"+"Number: "+mmm+"\n"+"Cloud database: Uploaded");
+                alert.show();
+
+
+            }
+        });
+        barProgressDialog.setTitle("Processing,please wait ...");
+        barProgressDialog.setMessage("Proceeding to test ...");
+        barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);
+        barProgressDialog.setProgress(0);
+        barProgressDialog.setMax(10);
+        barProgressDialog.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Here you should write your time consuming task...
+                    //tcpClient();
+
+                    tcpClient(mmm);
+
+                    while (barProgressDialog.getProgress() <= barProgressDialog
+                            .getMax()) {
+
+                        Thread.sleep(1000);
+                        updateBarHandler.post(new Runnable() {
+                            public void run() {
+                                barProgressDialog.incrementProgressBy(2);
 
 
 
+                                if (barProgressDialog.getProgress() == barProgressDialog
+                                        .getMax()) {
+                                    barProgressDialog.dismiss();
+
+                                }
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    Log.e("thiago", "error when trying to run the Thread==>"+e.getMessage());
+                }
+            }
+        }).start();
+    }
+
+    public void dialog3(){
+
+        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
         String a = "123";
         String b = "300";
         String c = "100";
@@ -218,45 +273,46 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        basicReadWrite(a,b,c,d);
-        //basicReadWrite();
-        //Intent intent = new Intent();
-        //intent.setClass(MainActivity.this, MapsActivity.class);
-        //startActivity(intent);
-        /*locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Thread t = new Thread(new Runnable() {
 
-        if (Build.VERSION.SDK_INT >= 23 &&ActivityCompat.checkSelfPermission(MainActivity.this,android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this,android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            requestPermissions(INITIAL_PERMS, MY_PERMISSION_ACCESS_COARSE_LOCATION);
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(commadStr, 1000, 5, locationListener);
-        Location location = locationManager.getLastKnownLocation(commadStr);
+            @Override
 
-        if (location != null)
+            public void run() {
 
-            location1.setText("經度："+location.getLongitude()+"\n緯度："+location.getLatitude());
+                try {
 
-        else
-            location1.setText(("GPS value fail"));
-            //locationManager.getLastKnownLocation(commadStr);
-            //location1.setText("經度："+location.getLongitude()+"\n緯度："+location.getLatitude());
+                    Thread.sleep(3000);//顯示3秒後，關閉dialog
 
-        Toast toast = Toast.makeText(this, "按鈕已被點擊", Toast.LENGTH_SHORT);
-        toast.show();
+                } catch (InterruptedException e) {
+
+// TODO Auto-generated catch block
+
+                    e.printStackTrace();
+
+                }
+
+               finally {
+                    progressDialog.dismiss();
+                }
 
 
-    } */
+            }
 
-    
 
-    public void dialog(String h, String i, String j, String k){
+        });
+
+
+        t.start();
+
+
+
+
+
+
+    }
+
+
+    public void dialog123(String h){
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm ");
@@ -264,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.setTitle("Test completed");
         //dialog.setMessage("Average:"+h+"\n"+"Max"+i+"\n"+"Min"+j+"\n"+k);
-        dialog.setMessage(Time+"\n"+"Result: Negative"+"\n"+"Cloud database: Uploaded");
+        dialog.setMessage(Time+"\n"+"Result: Negative"+"\n"+"Cloud database: Uploaded"+"\n"+"Average:"+h);
         dialog.setCancelable(true);
         dialog.show();
 
@@ -281,37 +337,35 @@ public class MainActivity extends AppCompatActivity {
 
 
         dialog2.setTitle("Please enter the number");
-        dialog2.setView(editText);
+
 
 
         dialog2.setCancelable(true);
 
         Button button4 = (Button) mview.findViewById(R.id.button20);
-        EditText editText = (EditText)mview.findViewById(R.id.editText5);
+
 
         button4.setOnClickListener((View view) -> {
-
+            EditText editText = (EditText)mview.findViewById(R.id.editText5);
+            String aaa = editText.getText().toString();
                 if (!editText.getText().toString().isEmpty())
                 {
-                    Toast.makeText(MainActivity.this,"Preparing to start...",Toast.LENGTH_LONG).show();
-                    String a = "123";
-                    String b = "300";
-                    String c = "100";
-                    String d = "200";
-                    SystemClock.sleep(3000);
 
-                    dialog(a,b,c,d);
 
-                    Toast.makeText(MainActivity.this,"Proceeding to test",Toast.LENGTH_LONG).show();
+                    Log.i("Client", "check:"+aaa);
+                    launchBarDialog(mview,aaa);
 
-                    /*Thread thread = new Thread() {
+
+                    //Toast.makeText(MainActivity.this,"Proceeding to test",Toast.LENGTH_LONG).show();
+
+                   /* Thread thread = new Thread() {
 
                         @Override
                         public void  run(){
                           tcpClient();
                         }
-                    }; */
-                    //thread.start();
+                    };
+                    thread.start(); */
 
 
                 }
@@ -322,6 +376,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this,"Please fill any empty fields",
                             Toast.LENGTH_LONG).show();
                 }
+
+
             }
         );
 
@@ -330,47 +386,11 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = dialog2.create();
         dialog.show();
 
-
-
-
-
-
-
     }
 
 
 
-
-
-
-    public LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            location1.setText("經度："+location.getLongitude()+"\n緯度："+location.getLatitude());
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    };
-
-    void testPush() {
-        Log.d("test","測試用push上傳程式");
-    }
-
-
-    public void tcpClient(){
+    public void tcpClient(String num){
 
         String hello = "";
 
@@ -383,21 +403,28 @@ public class MainActivity extends AppCompatActivity {
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socketClient.getOutputStream()));
+                //LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+                //View mview = getLayoutInflater().inflate(R.layout.layout,null);
+                //EditText editText = mview.findViewById(R.id.editText5);
 
+                //String op = editText.getText().toString();
 
                 String outMsg = "TCP connecting to " + port + System.getProperty("line.separator");//發出的數據
 
-                String op = editText.getText().toString();
 
 
-                    //Log.i("Client", "得到發出數據");
+
+
+                    Log.i("Client", num);
+                    Log.i("Client", "得到發出數據");
+
 
 
                         out.write(outMsg);//發送數據
 
-                        out.write(op);
+                        out.write(num);
 
-                        //Log.i("Client", "發送數據有效");
+                        Log.i("Client", "發送數據有效");
                         out.flush();
                         Log.i("TcpClient", "sent: " + outMsg);
                         //Log.i("TcpClient", "sent: " + op);
@@ -421,15 +448,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("TcpClient", "received: " + token);
             }
 
-            Log.i("矩陣","平均值："+tokens[0]);
-            Log.i("矩陣","最大值："+tokens[1]);
-            Log.i("矩陣","最小值："+tokens[2]);
-            Log.i("矩陣","標準差："+tokens[3]);
+            Log.i("矩陣","Average："+tokens[0]);
+            Log.i("矩陣","Result："+tokens[1]);
+            //Log.i("矩陣","最小值："+tokens[2]);
+            //Log.i("矩陣","標準差："+tokens[3]);
 
             //textView.setText("平均值："+tokens[0]+"\n"+"最大值"+tokens[1]+"\n"+"最小值："+tokens[2]+"\n"+"標準差："+tokens[3]);
 
-            basicReadWrite(tokens[0],tokens[1],tokens[2],tokens[3]);
-            dialog(tokens[0],tokens[1],tokens[2],tokens[3]);
+            basicReadWrite(tokens[0],num,tokens[1]);
 
 
 
@@ -437,10 +463,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         }catch (UnknownHostException e){e.printStackTrace();}
         catch (IOException e){e.printStackTrace();}
-
 
 
     }
