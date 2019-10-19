@@ -14,13 +14,13 @@ $ node app
 
  An Android application to cooperate with Python. It serves as a connection between the clients and online database and also records the identity of test subject for each particular test. Furthermore, it also uploads the test result to the online database immediately after every single test procedure is done. Finally, it will maintain a list of recent test results to provide longitudinal tracking.
 
-![](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/androidapp2.png =200x300)
+
  
  ## Google Firebase
  
  Our software team employed Google Firebase to demonstrate the concept of integrating an online database. When a new subject is tested, Firebase will create a new index to store its test result. If further tests are conducted, the result shall be recorded in the related index. Moreover, the Firebase can be accessed by authorized personal so that they will get updated with the fresh test result instantly.
  
-![](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/Firebase3.png)
+
  
  ## Network Socket
  
