@@ -19,7 +19,9 @@ Download the file "Python" and click "TCP.py" to run our program.
  ## Google Firebase
  
  Our software team employed Google Firebase to demonstrate the concept of integrating an online database. When a new subject is tested, Firebase will create a new index to store its test result. If further tests are conducted, the result shall be recorded in the related index. Moreover, the Firebase can be accessed by authorized personal so that they will get updated with the fresh test result instantly.
- 
+
+
+![](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/firebase.png)
 The connetion program between Android app and google Firebase is including in our app document, but you need to use your own Firebase project to connect. 
 
 
