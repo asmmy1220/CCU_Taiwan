@@ -6,6 +6,8 @@ When the device is booted and connected to an Android phone, the Python program 
 ![](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/screen.png)
 
 Download the file "Python" and click "TCP.py" to run our program.
+###Notice: this Python program only can be use in Raspberry Pi, you need to arrage in MCP3008 and 
+photoresistance.
 
 ## Android application
 
