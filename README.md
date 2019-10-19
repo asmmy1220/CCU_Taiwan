@@ -12,6 +12,8 @@ Download the file "Python" and click "TCP.py" to run our program.
 
  An Android application to cooperate with Python. It serves as a connection between the clients and online database and also records the identity of test subject for each particular test. Furthermore, it also uploads the test result to the online database immediately after every single test procedure is done. Finally, it will maintain a list of recent test results to provide longitudinal tracking.
  
+ ![](https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/androidapp.png)
+ 
  Clone or download our repository and you can run in Android Studio or your Android phone.
  
  ## Google Firebase
