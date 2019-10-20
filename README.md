@@ -20,7 +20,7 @@ Download the file "Python" and click "TCP.py" to run our program.
 
 ## Android application
 
- An Android application to cooperate with Python. It serves as a connection between the clients and online database and also records the identity of test subject for each particular test. Furthermore, it also uploads the test result to the online database immediately after every single test procedure is done. Finally, it will maintain a list of recent test results to provide longitudinal tracking.
+ An Android application cooperates with Python. It serves as a connection between the clients and online database and also records the identity of test subject for each particular test. Furthermore, it also uploads the test result to the online database immediately after every single test procedure is done. Finally, it will maintain a list of recent test results to provide longitudinal tracking.
  
  <img src="https://github.com/igemsoftware2019/CCU_Taiwan/blob/master/androidapp.png" alt="" width="350"/> 
  
